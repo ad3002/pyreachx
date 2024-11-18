@@ -1,0 +1,9 @@
+
+ast2json>=0.3.0
+click>=7.0
+networkx>=2.5
+jinja2>=2.11.0
+pytest>=6.0.0
+black>=21.0
+isort>=5.0.0
+mypy>=0.900
