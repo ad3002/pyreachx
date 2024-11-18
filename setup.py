@@ -9,12 +9,16 @@ setup(
         "click>=7.0",
         "networkx>=2.5",
         "jinja2>=2.11.0",
+        "PyYAML>=5.1.0",
     ],
     extras_require={
         'test': [
             'pytest>=6.0.0',
             'pytest-cov>=2.0.0',
             'pytest-mock>=3.0.0',
+            'black>=21.0',
+            'isort>=5.0.0',
+            'mypy>=0.900',
         ],
     },
     entry_points={
