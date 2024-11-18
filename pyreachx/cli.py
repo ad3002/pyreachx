@@ -3,6 +3,7 @@ from .analyzer import CodeAnalyzer
 from .config import AnalyzerConfig
 from .reporter import Reporter
 
+
 @click.command()
 @click.argument('project_path')
 @click.option('--entry-point', '-e', help='Main entry point (e.g., module.function)')

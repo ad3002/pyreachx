@@ -1,6 +1,6 @@
 import ast
 from pathlib import Path
-from typing import Set, Dict, Tuple
+from typing import Set, Dict, Tuple, List
 from .config import AnalyzerConfig
 from .result import AnalysisResult, UnreachableCode
 
@@ -12,6 +12,7 @@ class CodeAnalyzer:
         self.call_graph: Dict[str, Set[str]] = {}
         self.defined_functions: Dict[str, ast.FunctionDef] = {}
         self.reachable_functions: Set[str] = set()
+        self.class_instances: Dict[str, List[str]] = {}  # Add this line
 
     def analyze(self, project_path: str, entry_point: str = None) -> AnalysisResult:
         project_path = Path(project_path)
@@ -46,7 +47,6 @@ class CodeAnalyzer:
             def __init__(self, analyzer: 'CodeAnalyzer'):
                 self.analyzer = analyzer
                 self.current_class = None
-                self.analyzer.class_instances = {}
 
             def visit_FunctionDef(self, node: ast.FunctionDef):
                 if self.current_class:
@@ -92,32 +92,42 @@ class CodeAnalyzer:
             for node in ast.walk(func_def):
                 if isinstance(node, ast.Call):
                     callee_name = self._get_callee_name(node)
-                    if callee_name and callee_name in self.defined_functions:
-                        worklist.append(callee_name)
+                    if callee_name:
+                        # Check if it's a defined function here instead
+                        if callee_name in self.defined_functions:
+                            worklist.append(callee_name)
         
         self.reachable_functions = reachable
 
     def _get_callee_name(self, node: ast.Call) -> str:
         """Extract the callee's name from a Call node."""
+        name = None
         if isinstance(node.func, ast.Name):
-            return node.func.id
+            name = node.func.id
         elif isinstance(node.func, ast.Attribute):
+            method_name = node.func.attr
             if isinstance(node.func.value, ast.Name):
-                # Assume the function is a method of a class instance
+                # Instance method call: obj.method()
                 instance_name = node.func.value.id
-                method_name = node.func.attr
-                # Attempt to find the class name from instance (simplified)
-                for class_name in self.class_instances.get(instance_name, []):
-                    return f"{class_name}.{method_name}"
+                if instance_name in self.class_instances:
+                    class_name = self.class_instances[instance_name][0]
+                    qualified_name = f"{class_name}.{method_name}"
+                    # Only use qualified name if the method exists
+                    name = qualified_name if qualified_name in self.defined_functions else method_name
+                else:
+                    name = method_name
             elif isinstance(node.func.value, ast.Call):
                 # Handle cases like ClassName().method()
                 if isinstance(node.func.value.func, ast.Name):
                     class_name = node.func.value.func.id
-                    method_name = node.func.attr
-                    return f"{class_name}.{method_name}"
+                    qualified_name = f"{class_name}.{method_name}"
+                    # Only use qualified name if the method exists
+                    name = qualified_name if qualified_name in self.defined_functions else method_name
+                else:
+                    name = method_name
             else:
-                return node.func.attr
-        return None
+                name = method_name
+        return name
     
     def _find_unreachable_code(self):
         """Identify functions that are not in reachable functions set."""
