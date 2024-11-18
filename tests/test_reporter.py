@@ -1,4 +1,5 @@
 import json
+
 from pyreachx.reporter import Reporter
 from pyreachx.result import AnalysisResult, UnreachableCode
 

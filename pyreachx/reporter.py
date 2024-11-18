@@ -58,7 +58,7 @@ class Reporter:
         html_content += "<h1>Unreachable Code Analysis Report</h1>"
         html_content += "<h2>Summary Statistics</h2>"
         html_content += "<p>Total Unreachable Lines: {}</p>".format(
-            stats['total_unreachable_lines']
+            stats["total_unreachable_lines"]
         )
         html_content += f"<p>Files Affected: {len(stats['files_affected'])}</p>"
 
