@@ -19,6 +19,10 @@ setup(
             'black>=21.0',
             'isort>=5.0.0',
             'mypy>=0.900',
+            'flake8>=4.0.0',
+            'flake8-bugbear>=21.0.0',
+            'flake8-docstrings>=1.6.0',
+            'flake8-import-order>=0.18.0',
         ],
     },
     entry_points={

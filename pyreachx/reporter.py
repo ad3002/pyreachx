@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 from typing import Any, Dict
 
 from .result import AnalysisResult
@@ -57,9 +56,9 @@ class Reporter:
             <body>
         """
         html_content += "<h1>Unreachable Code Analysis Report</h1>"
-        html_content += f"<h2>Summary Statistics</h2>"
-        html_content += (
-            f"<p>Total Unreachable Lines: {stats['total_unreachable_lines']}</p>"
+        html_content += "<h2>Summary Statistics</h2>"
+        html_content += "<p>Total Unreachable Lines: {}</p>".format(
+            stats['total_unreachable_lines']
         )
         html_content += f"<p>Files Affected: {len(stats['files_affected'])}</p>"
 
@@ -74,7 +73,8 @@ class Reporter:
         for item in self.result.unreachable_items:
             html_content += f"""
             <div class='item'>
-                <strong>{item.file_path}</strong> (lines {item.line_start}-{item.line_end})<br>
+                <strong>{item.file_path}</strong>
+                  (lines {item.line_start}-{item.line_end})<br>
                 Type: {item.code_type}<br>
                 Name: {item.name}<br>
                 Confidence: {item.confidence:.2%}

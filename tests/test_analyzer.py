@@ -4,7 +4,6 @@ import pytest
 
 from pyreachx.analyzer import AnalysisResult, CodeAnalyzer
 from pyreachx.config import AnalyzerConfig
-from pyreachx.result import UnreachableCode
 
 
 def test_analyze_simple_function(tmp_path):
@@ -36,10 +35,10 @@ def test_analyze_class_methods(tmp_path):
 class TestClass:
     def used_method(self):
         return 42
-        
+
     def unused_method(self):
         return 24
-        
+
 def main():
     t = TestClass()
     return t.used_method()
@@ -70,14 +69,14 @@ class AnotherClass:
 def main():
     # Direct function call
     simple_function()
-    
+
     # Method call via instance
     obj = TestClass()
     obj.undefined_method()  # Method that doesn't exist in TestClass
-    
+
     # Chained method call
     AnotherClass().undefined_method()  # Method that doesn't exist in AnotherClass
-    
+
     # Regular calls
     TestClass().method1()
     obj.method2()
@@ -112,13 +111,13 @@ def test_get_callee_name_edge_cases(tmp_path):
 def main():
     # Complex attribute access
     obj.attr1.attr2()
-    
+
     # Unknown instance method call
     unknown_obj.method()
-    
+
     # Call with no clear name
     (lambda x: x)()
-    
+
     # Complex chained call
     (obj.get_something()).method()
 """
