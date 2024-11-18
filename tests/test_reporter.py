@@ -1,7 +1,9 @@
+import json
+
 import pytest
+
 from pyreachx.reporter import Reporter
 from pyreachx.result import AnalysisResult, UnreachableCode
-import json
 
 
 def test_html_report_generation(tmp_path):

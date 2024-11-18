@@ -1,6 +1,8 @@
-import pytest
 import ast
-from pyreachx.analyzer import CodeAnalyzer, AnalysisResult
+
+import pytest
+
+from pyreachx.analyzer import AnalysisResult, CodeAnalyzer
 from pyreachx.config import AnalyzerConfig
 from pyreachx.result import UnreachableCode
 

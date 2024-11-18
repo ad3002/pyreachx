@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from typing import List, Dict
 from pathlib import Path
+from typing import Dict, List
 
 
 @dataclass

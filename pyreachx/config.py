@@ -1,7 +1,8 @@
-import yaml
-from dataclasses import dataclass, field
-from typing import List, Pattern, Dict, Any
 import re
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Pattern
+
+import yaml
 
 
 @dataclass

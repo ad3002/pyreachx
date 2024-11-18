@@ -1,6 +1,7 @@
 import ast
 from pathlib import Path
-from typing import Set, Dict, Tuple, List
+from typing import Dict, List, Set, Tuple
+
 from .config import AnalyzerConfig
 from .result import AnalysisResult, UnreachableCode
 

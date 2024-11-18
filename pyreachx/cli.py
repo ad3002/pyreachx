@@ -1,4 +1,5 @@
 import click
+
 from .analyzer import CodeAnalyzer
 from .config import AnalyzerConfig
 from .reporter import Reporter

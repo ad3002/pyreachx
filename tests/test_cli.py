@@ -1,7 +1,9 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 from click.testing import CliRunner
+
 from pyreachx.cli import main
-from unittest.mock import patch, MagicMock
 
 
 def test_main_no_arguments():

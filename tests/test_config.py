@@ -1,7 +1,9 @@
+import os
+
 import pytest
 import yaml
+
 from pyreachx.config import AnalyzerConfig
-import os
 
 
 def test_from_file_with_valid_config(tmp_path):
