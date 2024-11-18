@@ -7,3 +7,4 @@ pytest>=6.0.0
 black>=21.0
 isort>=5.0.0
 mypy>=0.900
+yaml>=5.1.0
