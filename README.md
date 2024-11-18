@@ -1,98 +1,172 @@
-# Technical Specification: Python Code Reachability Analyzer
+# PyReachX
 
-## 1. Overview
-A static code analysis tool that identifies unreachable code fragments in a Python codebase by analyzing call graphs and code paths starting from a specified main function.
+PyReachX is a static code analysis tool that helps identify unreachable code in Python projects. It analyzes your Python codebase to find functions and methods that are never called or accessed.
 
-## 2. Objectives
-- Identify Python code fragments that are not reachable from the main entry point
-- Generate detailed reports of unused functions, classes, and methods
-- Support modern Python codebases with multiple files and packages
-- Minimize false positives in dynamic Python code patterns
+[![CI](https://github.com/ad3002/pyreachx/actions/workflows/ci.yml/badge.svg)](https://github.com/ad3002/pyreachx/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/pyreachx.svg)](https://badge.fury.io/py/pyreachx)
+[![codecov](https://codecov.io/gh/ad3002/pyreachx/branch/main/graph/badge.svg)](https://codecov.io/gh/ad3002/pyreachx)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-## 3. Technical Requirements
+## Features
 
-### 3.1 Input Requirements
-- Path to the Python project root directory
-- Path to the main entry point function
-- Optional configuration file for exclusions and special cases
-- Support for virtual environments and package dependencies
-
-### 3.2 Analysis Capabilities
-- Static code parsing and AST (Abstract Syntax Tree) analysis
-- Call graph generation and traversal
-- Import statement resolution
-- Detection of:
-  * Unused functions and methods
-  * Unused classes
-  * Dead code blocks
-  * Unreachable conditional branches
-  * Unused module-level variables
-  * Unused import statements
-
-### 3.3 Special Cases Handling
-- Decorators and metaprogramming patterns
-- Dynamic imports and getattr() usage
-- Mock objects and test files
-- Abstract base classes and interfaces
-- Event handlers and callback functions
-- Command-line entry points
-
-## 4. Output Format
-
-### 4.1 Report Structure
-- JSON and HTML report formats
-- For each unreachable code fragment:
-  * File path and line numbers
-  * Type of code fragment (function, class, method, etc.)
-  * Confidence level of unreachability
-  * Suggested action (remove, investigate, or ignore)
-  * Context information (e.g., nearest reachable code)
-
-### 4.2 Summary Statistics
-- Total lines of unreachable code
-- Percentage of codebase affected
-- Distribution of unreachable code by type
-- Historical tracking of metrics
-
-## 5. Configuration Options
-- Exclusion patterns for files and directories
-- Custom entry points besides main
-- Ignore patterns for specific code patterns
-- Confidence threshold for reporting
-- Output format and verbosity settings
-
-## 6. Performance Requirements
-- Analysis time should scale linearly with codebase size
-- Memory usage should not exceed 2x the size of the codebase
-- Support for incremental analysis on large codebases
-
-## 7. Limitations
-- May not detect all dynamically generated code
-- Limited support for eval() and exec() statements
-- May produce false positives with complex metaprogramming
-- Cannot guarantee detection of runtime-dependent code paths
-
-## 8. Future Enhancements
-- Integration with CI/CD pipelines
-- IDE plugin support
-- Interactive code removal suggestions
-- Support for analyzing multiple entry points
-- Historical trending of unused code metrics
-
-## 9. Error Handling
-- Clear error messages for parsing failures
-- Graceful handling of syntax errors
-- Detailed logging of analysis process
-- Recovery mechanisms for partial analysis
-
-## 10. Integration Requirements
+- Identifies unreachable functions and methods
+- Generates HTML and JSON reports
+- Configurable exclusion patterns
+- Support for class method analysis
 - Command-line interface
-- Python API for programmatic usage
-- Exit codes for build pipeline integration
-- Support for common code quality tools
+- Confidence scoring for identified unreachable code
 
-## 11. Security Considerations
-- Safe handling of source code
-- No modification of original files
-- Proper handling of sensitive information in reports
-- Secure configuration file handling
+## Installation
+
+```bash
+pip install pyreachx
+```
+
+## Usage
+
+### Command Line
+
+```bash
+# Basic usage
+pyreachx /path/to/your/project
+
+# Specify entry point
+pyreachx /path/to/your/project -e module.main
+
+# Custom configuration file
+pyreachx /path/to/your/project -c config.yml
+
+# Custom output file
+pyreachx /path/to/your/project -o report.html
+```
+
+### Configuration
+
+Create a `pyreachx.yml` file to customize the analysis:
+
+```yaml
+exclude_patterns:
+  - "**/test_*.py"
+  - "**/__init__.py"
+ignore_decorators:
+  - "@property"
+  - "@staticmethod"
+confidence_threshold: 0.8
+```
+
+### Python API
+
+```python
+from pyreachx import CodeAnalyzer, AnalyzerConfig
+
+# Create configuration
+config = AnalyzerConfig.from_file("pyreachx.yml")
+
+# Initialize analyzer
+analyzer = CodeAnalyzer(config)
+
+# Run analysis
+result = analyzer.analyze("/path/to/project", entry_point="main")
+
+# Generate report
+from pyreachx import Reporter
+reporter = Reporter(result)
+reporter.generate_report("report.html")
+```
+
+## Example Output
+
+HTML Report:
+```html
+<div class='item'>
+    <strong>module.py</strong> (lines 10-15)<br>
+    Type: function<br>
+    Name: unused_function<br>
+    Confidence: 95%
+</div>
+```
+
+JSON Report:
+```json
+{
+    "unreachable_items": [
+        {
+            "file_path": "module.py",
+            "line_start": 10,
+            "line_end": 15,
+            "code_type": "function",
+            "name": "unused_function",
+            "confidence": 0.95
+        }
+    ],
+    "statistics": {
+        "total_unreachable_lines": 6,
+        "files_affected": ["module.py"],
+        "type_distribution": {
+            "function": 1
+        }
+    }
+}
+```
+
+## Development
+
+### Setup Development Environment
+
+```bash
+# Clone the repository
+git clone https://github.com/ad3002/pyreachx.git
+cd pyreachx
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install development dependencies
+pip install -e .[test]
+```
+
+### Running Tests
+
+```bash
+pytest tests/
+```
+
+### Code Style
+
+This project uses:
+- Black for code formatting
+- isort for import sorting
+- flake8 for linting
+
+```bash
+# Format code
+black pyreachx tests
+isort pyreachx tests
+
+# Check linting
+flake8 pyreachx tests
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- AST module from Python standard library
+- NetworkX for dependency graph analysis
+- Click for CLI interface
+- Jinja2 for report templating
+
+## Project Status
+
+PyReachX is in alpha stage. While it's functional, there might be false positives and edge cases that aren't handled yet. Use with caution in production environments.
