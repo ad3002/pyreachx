@@ -16,6 +16,28 @@ exclude = '''
 )/
 '''
 
+[project]
+name = "pyreachx"
+version = "0.1.0"
+description = "Python Code Reachability Analyzer"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"},
+]
+dependencies = [
+    "click",
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pre-commit",  # Added this line
+]
+
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project.scripts]
+pyreachx = "pyreachx.cli:main"
